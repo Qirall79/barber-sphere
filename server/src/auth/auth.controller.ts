@@ -56,7 +56,7 @@ export class AuthController {
       res.status(401).send({ isLogged: false });
     }
 
-    const user = await this.usersService.getUser(decodedToken.uid);
+    const user = await this.usersService.findOne(decodedToken.uid);
 
     res.status(200).send({
       user: {

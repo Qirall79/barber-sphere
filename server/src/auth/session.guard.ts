@@ -5,6 +5,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { FirebaseService } from './firebase.service';
+import { GqlExecutionContext } from '@nestjs/graphql';
 
 @Injectable()
 export class SessionGuard implements CanActivate {
@@ -13,7 +14,10 @@ export class SessionGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext) {
-    const req = context.switchToHttp().getRequest();
+    const ctx = GqlExecutionContext.create(context);
+    const req = ctx.getContext().req;
+    if (!req) return false;
+
     const session = this.firebaseService.extractSessionCookie(req);
 
     if (!session) return false;

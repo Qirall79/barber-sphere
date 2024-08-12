@@ -1,48 +1,59 @@
-'use client';
+"use client";
 
-import { createSession, createUser, upsertUser } from '@/lib/actions';
+import { createSession } from "@/lib/actions";
 import {
   emailSignIn,
   emailSignUp,
   extractErrorMessage,
   facebookSignIn,
   googleSignIn,
-} from '@/lib/firebase';
-import { Button, Input } from '@nextui-org/react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { IoIosEye, IoIosEyeOff } from 'react-icons/io';
+} from "@/lib/firebase";
+import { Button, Input } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 
-import { AuthError } from 'firebase/auth';
-import toast from 'react-hot-toast';
-import { FirebaseError } from 'firebase/app';
+import toast from "react-hot-toast";
+import { FirebaseError } from "firebase/app";
+import { useMutation } from "@apollo/client";
+import { CREATE_USER, UPSERT_USER } from "@/lib/queries";
 
 export const SignIn = () => {
+  const [createUser] = useMutation(CREATE_USER(), {});
+  const [upsertUser] = useMutation(UPSERT_USER(), {});
+
   const router = useRouter();
-  const [operation, setOperation] = useState<'signIn' | 'signUp'>('signIn');
+  const [operation, setOperation] = useState<"signIn" | "signUp">("signIn");
   const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    firstName: '',
-    lastName: '',
+    email: "",
+    password: "",
+    firstName: "",
+    lastName: "",
   });
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
-  const socialSignIn = async (provider: 'google' | 'facebook') => {
+  const socialSignIn = async (provider: "google" | "facebook") => {
     try {
       setIsLoading(true);
       let idToken: string | undefined;
-      if (provider === 'facebook') idToken = await facebookSignIn();
+      if (provider === "facebook") idToken = await facebookSignIn();
       else idToken = await googleSignIn();
       await createSession(idToken as string);
-      await upsertUser();
+      await upsertUser({
+        variables: {
+          createUserNameInput: {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+          },
+        },
+      });
       setIsLoading(false);
-      router.push('/');
+      router.push("/");
     } catch (error) {
-      console.log('Error signing in with ' + provider);
+      console.log("Error signing in with " + provider);
     } finally {
       setIsLoading(false);
     }
@@ -53,15 +64,22 @@ export const SignIn = () => {
     setIsLoading(true);
     try {
       let idToken: string | undefined;
-      if (operation == 'signIn')
+      if (operation == "signIn")
         idToken = await emailSignIn(formData.email, formData.password);
       else idToken = await emailSignUp(formData.email, formData.password);
       const session = await createSession(idToken as string);
 
-      if (operation == 'signUp' && session.status == 'success')
-        await createUser(formData.firstName, formData.lastName);
+      if (operation == "signUp" && session.status == "success")
+        await createUser({
+          variables: {
+            createUserNameInput: {
+              firstName: formData.firstName,
+              lastName: formData.lastName,
+            },
+          },
+        });
       setIsLoading(false);
-      router.push('/');
+      router.push("/");
     } catch (error: any) {
       if (error instanceof FirebaseError)
         toast.error(extractErrorMessage(error));
@@ -71,12 +89,12 @@ export const SignIn = () => {
   };
 
   return (
-    <div className='w-full max-w-[500px] flex flex-col space-y-6'>
-      <div className='w-full flex flex-col border border-slate-500 p-8 rounded-md space-y-4'>
-        <h2 className='text-3xl mb-4'>Sign Up</h2>
+    <div className="w-full max-w-[500px] flex flex-col space-y-6">
+      <div className="w-full flex flex-col border border-slate-500 p-8 rounded-md space-y-4">
+        <h2 className="text-3xl mb-4">Sign Up</h2>
 
-        <form className='flex flex-col space-y-4' autoComplete='off'>
-          {operation == 'signUp' && (
+        <form className="flex flex-col space-y-4" autoComplete="off">
+          {operation == "signUp" && (
             <>
               <Input
                 onChange={(e) => {
@@ -87,9 +105,9 @@ export const SignIn = () => {
                     };
                   });
                 }}
-                variant='bordered'
-                placeholder='John'
-                label='First Name'
+                variant="bordered"
+                placeholder="John"
+                label="First Name"
               />
               <Input
                 onChange={(e) => {
@@ -100,9 +118,9 @@ export const SignIn = () => {
                     };
                   });
                 }}
-                variant='bordered'
-                placeholder='Doe'
-                label='Last Name'
+                variant="bordered"
+                placeholder="Doe"
+                label="Last Name"
               />
             </>
           )}
@@ -116,10 +134,10 @@ export const SignIn = () => {
                 };
               });
             }}
-            type='email'
-            label='Email'
-            variant='bordered'
-            placeholder='example@mail.com'
+            type="email"
+            label="Email"
+            variant="bordered"
+            placeholder="example@mail.com"
           />
           <Input
             onChange={(e) => {
@@ -130,29 +148,29 @@ export const SignIn = () => {
                 };
               });
             }}
-            label='Password'
-            variant='bordered'
-            placeholder='Enter your password'
+            label="Password"
+            variant="bordered"
+            placeholder="Enter your password"
             endContent={
               <button
-                className='focus:outline-none'
-                type='button'
+                className="focus:outline-none"
+                type="button"
                 onClick={toggleVisibility}
               >
                 {isVisible ? (
-                  <IoIosEyeOff className='text-2xl text-default-400 pointer-events-none' />
+                  <IoIosEyeOff className="text-2xl text-default-400 pointer-events-none" />
                 ) : (
-                  <IoIosEye className='text-2xl text-default-400 pointer-events-none' />
+                  <IoIosEye className="text-2xl text-default-400 pointer-events-none" />
                 )}
               </button>
             }
-            type={isVisible ? 'text' : 'password'}
+            type={isVisible ? "text" : "password"}
           />
           <Button
             onClick={handleEmailSignUp}
-            type='submit'
-            variant='ghost'
-            color='warning'
+            type="submit"
+            variant="ghost"
+            color="warning"
             isDisabled={isLoading}
           >
             Sign Up
@@ -162,36 +180,36 @@ export const SignIn = () => {
         <hr />
 
         <Button
-          variant='ghost'
-          color='danger'
+          variant="ghost"
+          color="danger"
           isDisabled={isLoading}
           onClick={() => {
-            socialSignIn('google');
+            socialSignIn("google");
           }}
         >
           Continue with Google
         </Button>
         <Button
-          variant='ghost'
-          color='primary'
+          variant="ghost"
+          color="primary"
           isDisabled={isLoading}
           onClick={() => {
-            socialSignIn('facebook');
+            socialSignIn("facebook");
           }}
         >
           Continue with Facebook
         </Button>
         <p>
-          Don&apos;t have an account ?{' '}
+          Don&apos;t have an account ?{" "}
           <span
-            className='font-bold cursor-pointer text-teal-600'
+            className="font-bold cursor-pointer text-teal-600"
             onClick={() => {
               setOperation((state) =>
-                state === 'signIn' ? 'signUp' : 'signIn'
+                state === "signIn" ? "signUp" : "signIn"
               );
             }}
           >
-            {operation === 'signIn' ? 'Sign Up' : 'Sign In'}
+            {operation === "signIn" ? "Sign Up" : "Sign In"}
           </span>
         </p>
       </div>

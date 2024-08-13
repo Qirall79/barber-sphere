@@ -5,6 +5,8 @@ interface ISession {
     uid: string;
     email: string;
     name: string;
+    complete: boolean;
+    type: string;
   };
 }
 
@@ -19,7 +21,6 @@ export const getServerSession = async (): Promise<ISession | null> => {
       headers: {
         Cookie: `session=${sessionCookie}`,
       },
-      cache: "no-store",
     });
 
     const data = await response.json();

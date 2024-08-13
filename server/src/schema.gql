@@ -6,11 +6,13 @@ type User {
   id: Int!
   uid: String!
   email: String!
+  shopName: String
   firstName: String
   lastName: String
   picture: String!
   location: String
   type: String
+  complete: Boolean
   books: [Booking!]!
   bookings: [Booking!]!
   services: [Service!]!
@@ -47,10 +49,27 @@ type Query {
 
 type Mutation {
   createUser(createUserNameInput: CreateUserNameInput!): User!
-  upsertUser: User!
+  upsertUser(upsertUserInput: UpsertUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
 }
 
 input CreateUserNameInput {
   firstName: String!
   lastName: String!
+  type: String!
+}
+
+input UpsertUserInput {
+  type: String!
+}
+
+input UpdateUserInput {
+  uid: String
+  firstName: String
+  lastName: String
+  email: String
+  type: String
+  picture: String
+  shopName: String
+  location: String
 }

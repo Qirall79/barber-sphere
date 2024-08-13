@@ -14,6 +14,9 @@ export class CreateUserInput {
   @Field()
   email: string;
 
+  @Field()
+  type: string;
+
   @Field({ nullable: true })
   picture: string;
 }
@@ -25,4 +28,13 @@ export class CreateUserNameInput {
 
   @Field()
   lastName: string;
+
+  @Field()
+  type: string;
+}
+
+@InputType()
+export class UpsertUserInput {
+  @Field()
+  type: string;
 }

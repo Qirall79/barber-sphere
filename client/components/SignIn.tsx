@@ -25,6 +25,7 @@ export const SignIn = () => {
 
   const router = useRouter();
   const [operation, setOperation] = useState<"signIn" | "signUp">("signIn");
+  const [type, setType] = useState<"shop" | "user">("user");
   const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [formData, setFormData] = useState({
@@ -43,7 +44,15 @@ export const SignIn = () => {
       if (provider === "facebook") idToken = await facebookSignIn();
       else idToken = await googleSignIn();
       await createSession(idToken as string);
-      await upsertUser();
+      if (operation === 'signUp')
+        await upsertUser({
+          variables: {
+            upsertUserInput: {
+              type,
+            },
+          },
+        });
+      else
       setIsLoading(false);
       revalidate("/");
       router.push("/");
@@ -70,6 +79,7 @@ export const SignIn = () => {
             createUserNameInput: {
               firstName: formData.firstName,
               lastName: formData.lastName,
+              type,
             },
           },
         });
@@ -84,10 +94,41 @@ export const SignIn = () => {
     }
   };
 
+  const changeType = () => {
+    if (type === "shop") setType("user");
+    else setType("shop");
+  };
+
   return (
     <div className="w-full max-w-[500px] flex flex-col space-y-6">
       <div className="w-full flex flex-col border border-slate-500 p-8 rounded-md space-y-4">
-        <h2 className="text-3xl mb-4">Sign Up</h2>
+        <h2 className="text-3xl mb-4">
+          {operation == "signIn" ? "Sign In" : "Sign Up"}
+        </h2>
+        {operation == "signUp" && (
+          <div className="w-full flex items-center border-b-1 border-slate-500">
+            <p
+              onClick={changeType}
+              className={`w-1/2 py-3 text-center border-emerald-400 cursor-pointer hover:bg-slate-900 transition ${
+                type === "shop"
+                  ? "border-b-3 bg-slate-800 rounded-tl-md"
+                  : "border-b-3 border-slate-950"
+              }`}
+            >
+              Shop
+            </p>
+            <p
+              onClick={changeType}
+              className={`w-1/2 py-3 text-center border-emerald-400 cursor-pointer hover:bg-slate-900 transition ${
+                type === "user"
+                  ? "border-b-3 bg-slate-800 rounded-tr-md"
+                  : "border-b-3 border-slate-950"
+              }`}
+            >
+              User
+            </p>
+          </div>
+        )}
 
         <form className="flex flex-col space-y-4" autoComplete="off">
           {operation == "signUp" && (

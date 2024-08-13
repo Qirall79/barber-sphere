@@ -9,10 +9,15 @@ import {
 } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User } from '../entities/user.entity';
-import { CreateUserInput, CreateUserNameInput } from '../dto/create-user.input';
+import {
+  CreateUserInput,
+  CreateUserNameInput,
+  UpsertUserInput,
+} from '../dto/create-user.input';
 import { Booking } from 'src/entities/booking.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Service } from 'src/entities/service.entity';
+import { UpdateUserInput } from 'src/dto/update-user.input';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -37,7 +42,10 @@ export class UsersResolver {
   }
 
   @Mutation(() => User)
-  upsertUser(@Context() context) {
+  async upsertUser(
+    @Args('upsertUserInput') upsertUserInput: UpsertUserInput,
+    @Context() context,
+  ) {
     const req = context.req;
     const [firstName, lastName] = req.auth.name.split(' ');
     const user: CreateUserInput = {
@@ -46,8 +54,29 @@ export class UsersResolver {
       uid: req.auth?.uid,
       email: req.auth?.email,
       picture: req.auth?.picture,
+      type: upsertUserInput.type,
     };
-    return this.usersService.upsertUser(user);
+    return await this.usersService.upsertUser(user);
+  }
+
+  @Mutation(() => User)
+  async updateUser(
+    @Args('updateUserInput') updateUserInput: UpdateUserInput,
+    @Context() context,
+  ) {
+    const req = context.req;
+    const { picture, location, shopName } = updateUserInput;
+    return await this.prisma.user.update({
+      where: {
+        uid: req.auth?.uid,
+      },
+      data: {
+        picture,
+        location,
+        shopName,
+        complete: true,
+      },
+    });
   }
 
   @Query(() => [User], { name: 'users' })

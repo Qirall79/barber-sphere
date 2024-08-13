@@ -12,6 +12,9 @@ export class User {
   email: string;
 
   @Field({ nullable: true })
+  shopName: string;
+
+  @Field({ nullable: true })
   firstName: string;
 
   @Field({ nullable: true })
@@ -25,4 +28,7 @@ export class User {
 
   @Field({ nullable: true })
   type: string;
+
+  @Field({ nullable: true })
+  complete: boolean;
 }

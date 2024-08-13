@@ -62,8 +62,7 @@ export class AuthController {
 
     res.status(200).send({
       user: {
-        uid: user?.uid,
-        email: user?.email,
+        ...user,
         name: `${user?.firstName} ${user?.lastName}`,
       },
     });

@@ -8,6 +8,12 @@ import { UsersModule } from './users/users.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
+import { BookingsModule } from './bookings/bookings.module';
+import { ServicesModule } from './services/services.module';
+import { PrismaModule } from './prisma/prisma.module';
+import { APP_GUARD } from '@nestjs/core';
+import { SessionGuard } from './auth/session.guard';
+import { FirebaseService } from './auth/firebase.service';
 
 @Module({
   imports: [
@@ -20,9 +26,19 @@ import { join } from 'path';
       isGlobal: true,
     }),
     UsersModule,
+    BookingsModule,
+    ServicesModule,
+    PrismaModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    FirebaseService,
+    {
+      provide: APP_GUARD,
+      useClass: SessionGuard,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

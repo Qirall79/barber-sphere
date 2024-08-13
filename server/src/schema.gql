@@ -9,16 +9,45 @@ type User {
   firstName: String
   lastName: String
   picture: String!
+  location: String
+  type: String
+  books: [Booking!]!
+  bookings: [Booking!]!
+  services: [Service!]!
+}
+
+type Booking {
+  id: Int!
+  shopId: String!
+  userId: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  user: User!
+  shop: User!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Service {
+  id: Int!
+  name: String!
+  shopId: String!
+  pictures: [String!]!
+  shop: User!
 }
 
 type Query {
   users: [User!]!
-  user(uid: String!): User!
+  user(uid: String!): User
+  getBooking: Booking!
 }
 
 type Mutation {
   createUser(createUserNameInput: CreateUserNameInput!): User!
-  upsertUser(createUserNameInput: CreateUserNameInput!): User!
+  upsertUser: User!
 }
 
 input CreateUserNameInput {

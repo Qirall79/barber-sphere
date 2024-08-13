@@ -19,4 +19,10 @@ export class User {
 
   @Field()
   picture: string;
+
+  @Field({ nullable: true })
+  location: string;
+
+  @Field({ nullable: true })
+  type: string;
 }

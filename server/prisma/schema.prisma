@@ -14,10 +14,35 @@ datasource db {
 }
 
 model User {
-  id        Int     @id @default(autoincrement())
-  uid       String  @unique
+  id        Int       @id @default(autoincrement())
+  uid       String    @unique
+  email     String
+  shopName  String?
   firstName String?
   lastName  String?
-  email     String
   picture   String?
+  location  String?
+  type      String?
+  complete  Boolean   @default(false)
+  bookings  Booking[] @relation("shop_booking")
+  books     Booking[] @relation("user_booking")
+  services  Service[]
+}
+
+model Booking {
+  id        Int      @id @default(autoincrement())
+  shop      User     @relation("shop_booking", fields: [shopId], references: [uid])
+  user      User     @relation("user_booking", fields: [userId], references: [uid])
+  shopId    String
+  userId    String
+  startTime DateTime
+  endTime   DateTime
+}
+
+model Service {
+  id       Int      @id @default(autoincrement())
+  name     String
+  pictures String[]
+  shop     User     @relation(fields: [shopId], references: [uid])
+  shopId   String
 }

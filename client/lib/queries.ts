@@ -17,8 +17,8 @@ export const CREATE_USER = () => {
 
 export const UPSERT_USER = () => {
     return gql`
-      mutation CreateUser($createUserNameInput: CreateUserNameInput!) {
-        upsertUser(createUserNameInput: $createUserNameInput) {
+      mutation {
+        upsertUser {
           id
           uid
           email

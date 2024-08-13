@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import { FirebaseError } from "firebase/app";
 import { useMutation } from "@apollo/client";
 import { CREATE_USER, UPSERT_USER } from "@/lib/queries";
+import { revalidate } from "@/lib/revalidate";
 
 export const SignIn = () => {
   const [createUser] = useMutation(CREATE_USER(), {});
@@ -42,15 +43,9 @@ export const SignIn = () => {
       if (provider === "facebook") idToken = await facebookSignIn();
       else idToken = await googleSignIn();
       await createSession(idToken as string);
-      await upsertUser({
-        variables: {
-          createUserNameInput: {
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-          },
-        },
-      });
+      await upsertUser();
       setIsLoading(false);
+      revalidate("/");
       router.push("/");
     } catch (error) {
       console.log("Error signing in with " + provider);
@@ -79,6 +74,7 @@ export const SignIn = () => {
           },
         });
       setIsLoading(false);
+      revalidate("/");
       router.push("/");
     } catch (error: any) {
       if (error instanceof FirebaseError)

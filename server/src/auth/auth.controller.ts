@@ -12,8 +12,8 @@ import { AuthService } from './auth.service';
 import { CookieOptions, Response } from 'express';
 import { AuthGuard } from './auth.guard';
 import { FirebaseService } from './firebase.service';
-import { SessionGuard } from './session.guard';
 import { UsersService } from 'src/users/users.service';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -29,6 +29,7 @@ export class AuthController {
     private usersService: UsersService,
   ) {}
 
+  @Public()
   @UseGuards(AuthGuard)
   @Post()
   async sessionLogin(@Req() req, @Res() res: Response) {
@@ -41,6 +42,7 @@ export class AuthController {
     res.send({ status: 'success' });
   }
 
+  @Public()
   @Get()
   async getSession(@Req() req, @Res() res) {
     const session = this.firebaseService.extractSessionCookie(req);
@@ -67,7 +69,6 @@ export class AuthController {
     });
   }
 
-  @UseGuards(SessionGuard)
   @Delete()
   async deleteSession(@Req() req, @Res() res) {
     await this.authService.deleteSession(req, res, this.cookieOptions);

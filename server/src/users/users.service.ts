@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserInput } from './dto/create-user.input';
+import { CreateUserInput } from '../dto/create-user.input';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { User } from './entities/user.entity';
+import { User } from '../entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -25,8 +25,8 @@ export class UsersService {
     return newUser;
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll() {
+    return await this.prisma.user.findMany();
   }
 
   async findOne(uid: string) {

@@ -18,8 +18,28 @@ import { FirebaseError } from "firebase/app";
 import { useMutation } from "@apollo/client";
 import { CREATE_USER, UPSERT_USER } from "@/lib/queries";
 import { revalidate } from "@/lib/revalidate";
+import { useForm } from "react-hook-form";
+import { InputField } from "./ui/InputField";
+
+const signUpFields = [
+  {
+    name: "firstName",
+    label: "First Name",
+    errorMessage: "First Name is required",
+  },
+  {
+    name: "lastName",
+    label: "Last Name",
+    errorMessage: "First Name is required",
+  },
+];
 
 export const SignIn = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [createUser] = useMutation(CREATE_USER(), {});
   const [upsertUser] = useMutation(UPSERT_USER(), {});
 
@@ -28,12 +48,6 @@ export const SignIn = () => {
   const [type, setType] = useState<"shop" | "user">("user");
   const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    firstName: "",
-    lastName: "",
-  });
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
@@ -44,7 +58,7 @@ export const SignIn = () => {
       if (provider === "facebook") idToken = await facebookSignIn();
       else idToken = await googleSignIn();
       await createSession(idToken as string);
-      if (operation === 'signUp')
+      if (operation === "signUp")
         await upsertUser({
           variables: {
             upsertUserInput: {
@@ -52,8 +66,7 @@ export const SignIn = () => {
             },
           },
         });
-      else
-      setIsLoading(false);
+      else setIsLoading(false);
       revalidate("/");
       router.push("/");
     } catch (error) {
@@ -63,8 +76,7 @@ export const SignIn = () => {
     }
   };
 
-  const handleEmailSignUp = async (e: any) => {
-    e.preventDefault();
+  const handleEmailSignUp = async (formData: any) => {
     setIsLoading(true);
     try {
       let idToken: string | undefined;
@@ -130,64 +142,49 @@ export const SignIn = () => {
           </div>
         )}
 
-        <form className="flex flex-col space-y-4" autoComplete="off">
-          {operation == "signUp" && (
-            <>
-              <Input
-                onChange={(e) => {
-                  setFormData((oldValue) => {
-                    return {
-                      ...oldValue,
-                      firstName: e.target.value,
-                    };
-                  });
-                }}
-                variant="bordered"
-                placeholder="John"
-                label="First Name"
-              />
-              <Input
-                onChange={(e) => {
-                  setFormData((oldValue) => {
-                    return {
-                      ...oldValue,
-                      lastName: e.target.value,
-                    };
-                  });
-                }}
-                variant="bordered"
-                placeholder="Doe"
-                label="Last Name"
-              />
-            </>
-          )}
+        <form
+          className="flex flex-col space-y-4"
+          autoComplete="off"
+          onSubmit={handleSubmit(handleEmailSignUp)}
+        >
+          {operation == "signUp" &&
+            signUpFields.map((f) => {
+              return (
+                <InputField
+                  key={f.name}
+                  name={f.name}
+                  label={f.label}
+                  register={register}
+                  errors={errors}
+                  errorMessage={f.errorMessage}
+                />
+              );
+            })}
 
           <Input
-            onChange={(e) => {
-              setFormData((oldValue) => {
-                return {
-                  ...oldValue,
-                  email: e.target.value,
-                };
-              });
-            }}
+            {...register("email", {
+              required: {
+                value: true,
+                message: "Email is required",
+              },
+            })}
             type="email"
             label="Email"
             variant="bordered"
-            placeholder="example@mail.com"
+            errorMessage={<>{errors.email?.message}</>}
+            isInvalid={!!errors.email}
           />
           <Input
-            onChange={(e) => {
-              setFormData((oldValue) => {
-                return {
-                  ...oldValue,
-                  password: e.target.value,
-                };
-              });
-            }}
+            {...register("password", {
+              required: {
+                value: true,
+                message: "Password is required",
+              },
+            })}
+            errorMessage={<>{errors.password?.message}</>}
+            isInvalid={!!errors.password}
             label="Password"
             variant="bordered"
-            placeholder="Enter your password"
             endContent={
               <button
                 className="focus:outline-none"
@@ -204,7 +201,6 @@ export const SignIn = () => {
             type={isVisible ? "text" : "password"}
           />
           <Button
-            onClick={handleEmailSignUp}
             type="submit"
             variant="ghost"
             color="warning"
@@ -237,7 +233,7 @@ export const SignIn = () => {
           Continue with Facebook
         </Button>
         <p>
-          Don&apos;t have an account ?{" "}
+          Don&apos;t have an account ?
           <span
             className="font-bold cursor-pointer text-teal-600"
             onClick={() => {

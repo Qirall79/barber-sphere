@@ -1,31 +1,24 @@
 "use client";
 
-import { apolloClient } from "@/lib/apolloClient";
 import { UPDATE_USER } from "@/lib/queries";
 import { revalidate } from "@/lib/revalidate";
 import { useMutation } from "@apollo/client";
-import { Button, Input } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { InputField } from "./ui/InputField";
+import { useForm } from "react-hook-form";
 
 export const ConfigForm = ({ type }: { type: string }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
   const [updateUser, { loading }] = useMutation(UPDATE_USER());
-  const [formData, setFormData] = useState({
-    shopName: "",
-    location: "",
-    picture: "",
-  });
   const router = useRouter();
 
-  const handleChange = (field: string, value: string) => {
-    setFormData({
-      ...formData,
-      [field]: value,
-    });
-  };
-
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+  const onSubmit = async (formData: any) => {
     await updateUser({
       variables: {
         updateUserInput: formData,
@@ -37,28 +30,34 @@ export const ConfigForm = ({ type }: { type: string }) => {
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col space-y-4 w-full max-w-[400px]"
       autoComplete="off"
     >
       {type && type == "shop" && (
         <>
-          <Input
-            onChange={(e) => handleChange("shopName", e.target.value)}
-            variant="bordered"
+          <InputField
+            errors={errors}
             label="Shop Name"
+            name="shopName"
+            register={register}
+            errorMessage="shop name is required"
           />
-          <Input
-            onChange={(e) => handleChange("location", e.target.value)}
-            variant="bordered"
+          <InputField
+            errors={errors}
             label="Location"
+            name="location"
+            register={register}
+            errorMessage="location is required"
           />
         </>
       )}
-      <Input
-        onChange={(e) => handleChange("picture", e.target.value)}
-        variant="bordered"
+      <InputField
+        errors={errors}
         label="Picture"
+        name="picture"
+        register={register}
+        errorMessage="picture is required"
       />
       <Button isLoading={loading} type="submit" color="primary">
         Submit

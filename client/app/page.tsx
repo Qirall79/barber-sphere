@@ -11,7 +11,7 @@ export default async function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <p>{session ? "Logged in as " + session.user.name : "Logged out"}</p>
+      <p>{session ? "Logged in as " + session?.user.name : "Logged out"}</p>
       {session && <SignOut />}
     </main>
   );

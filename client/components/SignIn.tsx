@@ -41,7 +41,7 @@ export const SignIn = () => {
     formState: { errors },
   } = useForm();
   const [createUser] = useMutation(CREATE_USER(), {});
-  const [upsertUser] = useMutation(UPSERT_USER(), {});
+  const [upsertUser, { error, data }] = useMutation(UPSERT_USER(), {});
 
   const router = useRouter();
   const [operation, setOperation] = useState<"signIn" | "signUp">("signIn");
@@ -58,15 +58,14 @@ export const SignIn = () => {
       if (provider === "facebook") idToken = await facebookSignIn();
       else idToken = await googleSignIn();
       await createSession(idToken as string);
-      if (operation === "signUp")
-        await upsertUser({
-          variables: {
-            upsertUserInput: {
-              type,
-            },
+      await upsertUser({
+        variables: {
+          upsertUserInput: {
+            type,
           },
-        });
-      else setIsLoading(false);
+        },
+      });
+      setIsLoading(false);
       revalidate("/");
       router.push("/");
     } catch (error) {

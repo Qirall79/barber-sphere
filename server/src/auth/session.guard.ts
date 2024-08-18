@@ -23,7 +23,9 @@ export class SessionGuard implements CanActivate {
     if (isPublic) return true;
 
     const ctx = GqlExecutionContext.create(context);
+
     const req = ctx.getContext().req;
+
     if (!req) return false;
 
     const session = this.firebaseService.extractSessionCookie(req);

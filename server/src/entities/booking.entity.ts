@@ -12,8 +12,8 @@ export class Booking {
   userId: string;
 
   @Field(() => Date)
-  startDate: Date;
+  startTime: Date;
 
   @Field(() => Date)
-  endDate: Date;
+  endTime: Date;
 }

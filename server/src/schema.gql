@@ -22,8 +22,8 @@ type Booking {
   id: Int!
   shopId: String!
   userId: String!
-  startDate: DateTime!
-  endDate: DateTime!
+  startTime: DateTime!
+  endTime: DateTime!
   user: User!
   shop: User!
 }
@@ -44,13 +44,18 @@ type Service {
 type Query {
   users: [User!]!
   user(uid: String!): User
-  getBooking: Booking!
+  getBooking(id: Float!): Booking!
+  getUserBookings(uid: String!): [Booking!]!
+  getShopBookings(uid: String!): [Booking!]!
 }
 
 type Mutation {
   createUser(createUserNameInput: CreateUserNameInput!): User!
   upsertUser(upsertUserInput: UpsertUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
+  addNotification: String!
+  createBooking(booking: AddBookingDto!): Booking!
+  deleteBooking(id: Float!): String
 }
 
 input CreateUserNameInput {
@@ -72,4 +77,15 @@ input UpdateUserInput {
   picture: String
   shopName: String
   location: String
+}
+
+input AddBookingDto {
+  uid: String!
+  startTime: DateTime!
+  endTime: DateTime!
+  shopId: String!
+}
+
+type Subscription {
+  notificationAdded: String!
 }

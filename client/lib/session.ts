@@ -1,15 +1,5 @@
 import { cookies } from "next/headers";
 
-interface ISession {
-  user: {
-    uid: string;
-    email: string;
-    name: string;
-    complete: boolean;
-    type: string;
-  };
-}
-
 export const getServerSession = async (): Promise<ISession | null> => {
   const sessionCookie = cookies().get("session")?.value;
 

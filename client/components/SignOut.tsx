@@ -1,9 +1,10 @@
-'use client';
+"use client";
 
-import { removeSession } from '@/lib/actions';
-import { signOutFirebase } from '@/lib/firebase';
-import { Button } from '@nextui-org/react';
-import { useRouter } from 'next/navigation';
+import { removeSession } from "@/lib/actions";
+import { signOutFirebase } from "@/lib/firebase";
+import { revalidate } from "@/lib/revalidate";
+import { Button } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
 export const SignOut = () => {
   const router = useRouter();
@@ -11,14 +12,15 @@ export const SignOut = () => {
   const handleLogOut = async () => {
     await signOutFirebase();
     await removeSession();
-    router.push('/auth');
+    revalidate("/auth");
+    router.push("/auth");
   };
 
   return (
     <>
-      <Button color='danger' onClick={handleLogOut}>
+      <p color="danger" className="text-pink-600" onClick={handleLogOut}>
         Log Out
-      </Button>
+      </p>
     </>
   );
 };

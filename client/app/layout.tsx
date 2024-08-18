@@ -21,7 +21,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={inter.className + " dark min-h-screen bg-slate-900"}>
+      <body className={inter.className + " dark min-h-screen bg-slate-950"}>
         <Provider>
           <Navbar user={session?.user} />
           {children}

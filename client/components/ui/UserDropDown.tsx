@@ -12,7 +12,7 @@ import { SignOut } from "../SignOut";
 export default function UserDropDown({ user }: { user: IUser }) {
   return (
     <div>
-      <Dropdown placement="bottom-end">
+      <Dropdown className="bg-slate-950" placement="bottom-end">
         <DropdownTrigger>
           <Avatar
             isBordered
@@ -23,10 +23,7 @@ export default function UserDropDown({ user }: { user: IUser }) {
         </DropdownTrigger>
         <DropdownMenu aria-label="Profile Actions" variant="flat">
           <DropdownItem key="settings">My Settings</DropdownItem>
-          <DropdownItem key="analytics">Analytics</DropdownItem>
-          <DropdownItem key="system">System</DropdownItem>
           <DropdownItem key="configurations">Configurations</DropdownItem>
-          <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
           <DropdownItem key="logout" color="danger">
             <SignOut />
           </DropdownItem>

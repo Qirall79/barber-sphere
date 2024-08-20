@@ -15,7 +15,7 @@ export default function UserDropDown({ user }: { user: IUser }) {
     <div className="w-full hover:bg-slate-800 px-2 py-1 rounded-md transition-all cursor-pointer">
       <Dropdown className="bg-slate-900" placement="bottom-end">
         <DropdownTrigger>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between ">
             <User
               name={user.name}
               description={user.type}
@@ -26,7 +26,7 @@ export default function UserDropDown({ user }: { user: IUser }) {
             <CiMenuKebab size={20} />
           </div>
         </DropdownTrigger>
-        <DropdownMenu aria-label="Profile Actions" variant="flat">
+        <DropdownMenu className="text-slate-100" aria-label="Profile Actions" variant="flat">
           <DropdownItem key="settings">My Settings</DropdownItem>
           <DropdownItem key="configurations">Configurations</DropdownItem>
           <DropdownItem key="logout" color="danger">

@@ -11,10 +11,10 @@ import {
   MdNotifications,
   MdOutlineMenu,
 } from "react-icons/md";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { useState } from "react";
 import { HiMenuAlt1 } from "react-icons/hi";
 import { LuArrowLeftFromLine } from "react-icons/lu";
+import { SiMapbox } from "react-icons/si";
 
 export const Navbar = ({ user }: { user: IUser | undefined }) => {
   const [menuOpen, setMenuOpen] = useState(true);
@@ -23,7 +23,7 @@ export const Navbar = ({ user }: { user: IUser | undefined }) => {
 
   return (
     <nav
-      className={`bg-slate-950 text-slate-100 h-screen py-4 relative ${
+      className={`bg-slate-950 text-slate-100 min-h-screen py-4 relative ${
         menuOpen ? "w-[320px] px-4" : "-translate-x-full w-0 px-0"
       } transition-all`}
     >
@@ -32,9 +32,8 @@ export const Navbar = ({ user }: { user: IUser | undefined }) => {
           menuOpen ? "" : "hidden"
         }`}
       >
-        <Link
+        <div
           className="w-full mb-12 flex justify-between items-center"
-          href={"/"}
         >
           <Image
             className="translate-x-2"
@@ -49,9 +48,9 @@ export const Navbar = ({ user }: { user: IUser | undefined }) => {
           >
             <LuArrowLeftFromLine size={28} />
           </div>
-        </Link>
+        </div>
         <ul
-          className={`hidden w-full lg:flex flex-col flex-grow space-y-6 ${chakraPetch.className}`}
+          className={`w-full flex flex-col flex-grow space-y-6 ${chakraPetch.className}`}
         >
           <li>
             <Link
@@ -65,16 +64,25 @@ export const Navbar = ({ user }: { user: IUser | undefined }) => {
           <li>
             <Link
               className="flex items-center space-x-4 hover:bg-slate-800 px-2 py-1 rounded-md transition-all"
-              href={"/analytics"}
+              href={"/dashboard"}
             >
               <MdAnalytics size={32} />
-              <p>Analytics</p>
+              <p>Dashboard</p>
             </Link>
           </li>
           <li>
             <Link
               className="flex items-center space-x-4 hover:bg-slate-800 px-2 py-1 rounded-md transition-all"
-              href={"/bookings"}
+              href={"/explore"}
+            >
+              <SiMapbox  size={32} />
+              <p>Explore</p>
+            </Link>
+          </li>
+          <li>
+            <Link
+              className="flex items-center space-x-4 hover:bg-slate-800 px-2 py-1 rounded-md transition-all"
+              href={"/orders"}
             >
               <Image
                 height={32}

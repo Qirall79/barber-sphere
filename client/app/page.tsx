@@ -1,8 +1,4 @@
-import { SignIn } from "@/components/SignIn";
-import { SignOut } from "@/components/SignOut";
-import { TriggerLiveEvent } from "@/components/TriggerLiveEvent";
 import { getServerSession } from "@/lib/session";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function Home() {
@@ -11,8 +7,8 @@ export default async function Home() {
   if (!session?.user.complete) redirect("/config");
 
   return (
-    <main className="w-full flex flex-col flex-grow items-center justify-between p-24 bg-slate-100 rounded-md">
-      this is homepage
+    <main className="w-full flex flex-col flex-grow p-12 bg-slate-100  rounded-md">
+      <h1 className="text-3xl font-semibold">Home</h1>
     </main>
   );
 }

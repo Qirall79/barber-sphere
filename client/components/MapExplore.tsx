@@ -28,12 +28,17 @@ export const MapExplore = () => {
       setZoom(map.current.getZoom().toFixed(2));
     });
 
-    // map.current.on("click", (e: any) => {
-    //   let x = e.lngLat.wrap().lng;
-    //   let y = e.lngLat.wrap().lat;
+    let x = -70.878;
+    let y = 42.3612;
 
-    //   new mapboxgl.Marker({ color: "blue" }).setLngLat([x, y]).addTo(map);
-    // });
+    new mapboxgl.Marker().setLngLat([x, y]).addTo(map.current);
+    map.current.on("click", async (e: any) => {
+        x = e.lngLat.wrap().lng;
+        y = e.lngLat.wrap().lat;
+        
+        new mapboxgl.Marker().setLngLat([x, y]).addTo(map.current);
+      //   await map.current.addMarker(x, y);
+    });
   });
 
   return (

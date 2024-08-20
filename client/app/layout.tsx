@@ -28,12 +28,12 @@ export default async function RootLayout({
         ></link>
       </head>
       <body
-        className={inter.className + "min-w-screen min-h-screen dark relative"}
+        className={inter.className + "min-w-screen min-h-screen relative"}
       >
         <Provider>
           <div className="flex bg-slate-950">
             <Navbar user={session?.user} />
-            <div className="flex flex-grow p-1">{children}</div>
+            <div className="flex flex-grow p-1 light">{children}</div>
           </div>
         </Provider>
       </body>

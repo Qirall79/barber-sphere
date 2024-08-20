@@ -1,15 +1,15 @@
-'use client';
-import { Map } from 'react-map-gl';
-import mapboxgl from 'mapbox-gl';
+'use client'
+
+import { LngLatLike } from 'mapbox-gl';
 import { useEffect, useRef, useState } from 'react';
-import { LngLatLike, MapInstance, MapLib } from 'react-map-gl/dist/esm/types';
+import mapboxgl from 'mapbox-gl';
 
 mapboxgl.accessToken =
   'pk.eyJ1IjoicWlyYWxsNzkiLCJhIjoiY20wMmlncmlkMDFrZzJtcXhweDZkcWgxdyJ9.1M4Azuu3IoRflZ9h0pZGcQ';
 
 const markers: any[] = [];
 
-export const MapExplore = () => {
+export const MapInput = ({ setPosition }: { setPosition: any }) => {
   const mapContainer = useRef(null);
   const map: any = useRef(null);
   const [lng, setLng] = useState(-70.9);
@@ -17,7 +17,7 @@ export const MapExplore = () => {
   const [zoom, setZoom] = useState(4);
 
   useEffect(() => {
-    let userLocation = [-8.0631, 32.655];
+    let userLocation: LngLatLike = [-8.0631, 32.655];
     navigator.geolocation.getCurrentPosition((pos) => {
       userLocation = [pos.coords.longitude, pos.coords.latitude];
     });
@@ -26,11 +26,16 @@ export const MapExplore = () => {
     map.current = new mapboxgl.Map({
       container: mapContainer.current!,
       style: 'mapbox://styles/mapbox/navigation-night-v1',
-      center: userLocation as (LngLatLike | undefined),
+      center: userLocation,
       zoom: zoom,
     });
 
     map.current.on('load', () => {
+	const newMarker = new mapboxgl.Marker()
+	.setLngLat(userLocation)
+	.addTo(map.current);
+	markers.push(newMarker);
+	setPosition(userLocation);
       map.current.flyTo({
         center: userLocation,
         essential: true,
@@ -64,15 +69,13 @@ export const MapExplore = () => {
         .setLngLat([x, y])
         .addTo(map.current);
       markers.push(newMarker);
+	  setPosition([x, y]);
     });
   });
 
   return (
     <div>
-      <div className='sidebar'>
-        Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
-      </div>
-      <div ref={mapContainer} className='map-container h-[800px] rounded-md' />
+      <div ref={mapContainer} className='map-container h-[560px] rounded-md' />
     </div>
   );
 };

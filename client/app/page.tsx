@@ -11,7 +11,7 @@ export default async function Home() {
   if (!session?.user.complete) redirect("/config");
 
   return (
-    <main className="w-full flex flex-col flex-grow items-center justify-between p-24 bg-slate-100 rounded-r-md rounded-bl-md">
+    <main className="w-full flex flex-col flex-grow items-center justify-between p-24 bg-slate-100 rounded-md">
       this is homepage
     </main>
   );

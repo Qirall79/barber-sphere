@@ -14,6 +14,7 @@ import {
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { useState } from "react";
 import { HiMenuAlt1 } from "react-icons/hi";
+import { LuArrowLeftFromLine } from "react-icons/lu";
 
 export const Navbar = ({ user }: { user: IUser | undefined }) => {
   const [menuOpen, setMenuOpen] = useState(true);
@@ -31,13 +32,22 @@ export const Navbar = ({ user }: { user: IUser | undefined }) => {
           menuOpen ? "" : "hidden"
         }`}
       >
-        <Link className="w-full mb-12 flex justify-between items-center" href={"/"}>
-          <Image height={120} width={120} alt="logo" src={"/images/logo.png"} />
+        <Link
+          className="w-full mb-12 flex justify-between items-center"
+          href={"/"}
+        >
+          <Image
+            className="translate-x-2"
+            height={120}
+            width={120}
+            alt="logo"
+            src={"/images/logo.png"}
+          />
           <div
             onClick={() => setMenuOpen(false)}
             className="flex justify-center items-center cursor-pointer w-10 h-10 text-slate-100 bg-slate-950 rounded-l-2xl"
           >
-            <IoIosArrowBack size={32} />
+            <LuArrowLeftFromLine size={28} />
           </div>
         </Link>
         <ul
@@ -101,16 +111,9 @@ export const Navbar = ({ user }: { user: IUser | undefined }) => {
         </ul>
         <UserDropDown user={user} />
       </div>
-      {/* <div
-        onClick={() => setMenuOpen(false)}
-        className="flex justify-center items-center cursor-pointer absolute top-1 -right-1 w-10 h-10 text-slate-950 bg-slate-100 rounded-l-2xl"
-      >
-        <IoIosArrowBack size={32} />
-      </div> */}
-
       <div
         onClick={() => setMenuOpen(true)}
-        className={`flex justify-center items-center cursor-pointer absolute top-1 -right-10 w-12 h-10 text-slate-100 bg-slate-950 rounded-r-2xl ${
+        className={`flex justify-center items-center cursor-pointer absolute top-8 left-0 w-12 h-10 text-slate-100 bg-slate-950 rounded-r-2xl ${
           menuOpen ? "hidden" : ""
         }`}
       >

@@ -22,7 +22,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={inter.className + "min-w-screen min-h-screen dark relative"}
+        className={inter.className + "min-w-screen min-h-screen dark relative text-slate-100"}
       >
         <Provider>
           <div className="flex bg-slate-950">

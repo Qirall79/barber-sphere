@@ -22,22 +22,20 @@ export const MapExplore = () => {
       zoom: zoom,
     });
 
-    map.current.on("move", () => {
-      setLng(map.current.getCenter().lng.toFixed(4));
-      setLat(map.current.getCenter().lat.toFixed(4));
-      setZoom(map.current.getZoom().toFixed(2));
-    });
+    let x = map.current.getCenter().lng;
+    let y = map.current.getCenter().lat;
 
-    let x = -70.878;
-    let y = 42.3612;
+    let lnglat = new mapboxgl.LngLat(x, y);
 
-    new mapboxgl.Marker().setLngLat([x, y]).addTo(map.current);
+    let m = new mapboxgl.Marker().setLngLat(lnglat).addTo(map.current);
+
     map.current.on("click", async (e: any) => {
-        x = e.lngLat.wrap().lng;
-        y = e.lngLat.wrap().lat;
-        
-        new mapboxgl.Marker().setLngLat([x, y]).addTo(map.current);
-      //   await map.current.addMarker(x, y);
+      map.current._markers.forEach((m) => m.remove());
+
+      x = e.lngLat.wrap().lng;
+      y = e.lngLat.wrap().lat;
+
+      new mapboxgl.Marker().setLngLat([x, y]).addTo(map.current);
     });
   });
 

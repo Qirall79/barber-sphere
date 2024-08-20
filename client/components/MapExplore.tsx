@@ -22,19 +22,11 @@ export const MapExplore = () => {
       zoom: zoom,
     });
 
-    let x = map.current.getCenter().lng;
-    let y = map.current.getCenter().lat;
-
-    let lnglat = new mapboxgl.LngLat(x, y);
-
-    let m = new mapboxgl.Marker().setLngLat(lnglat).addTo(map.current);
-
+    
     map.current.on("click", async (e: any) => {
-      map.current._markers.forEach((m) => m.remove());
-
-      x = e.lngLat.wrap().lng;
-      y = e.lngLat.wrap().lat;
-
+      map.current._markers.forEach((m: any) => m.remove());
+      let x = e.lngLat.wrap().lng;
+      let y = e.lngLat.wrap().lat;
       new mapboxgl.Marker().setLngLat([x, y]).addTo(map.current);
     });
   });

@@ -11,122 +11,109 @@ import {
   MdNotifications,
   MdOutlineMenu,
 } from "react-icons/md";
-import { Tooltip } from "@nextui-org/react";
-import { IoMdClose } from "react-icons/io";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { useState } from "react";
+import { HiMenuAlt1 } from "react-icons/hi";
 
 export const Navbar = ({ user }: { user: IUser | undefined }) => {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(true);
 
   if (!user) return <></>;
 
   return (
-    <nav className="w-full bg-slate-900 flex justify-center py-2 px-10 lg:px-20">
-      <div className="w-full max-w-[1250px] flex justify-between items-center">
+    <nav
+      className={`bg-slate-950 text-slate-100 h-screen w-[300px]  py-4 relative ${
+        menuOpen ? "px-4" : "-translate-x-full w-0 static px-0"
+      } transition-all`}
+    >
+      <div
+        className={`max-h-screen h-full w-full max-w-[1250px] flex flex-col justify-start items-start ${
+          menuOpen ? "" : "hidden"
+        }`}
+      >
         <MdOutlineMenu
           className="lg:hidden cursor-pointer"
           size={36}
           onClick={() => setMenuOpen(true)}
         />
-
-        <Link className="" href={"/"}>
-          <Image height={100} width={100} alt="logo" src={"/images/logo.png"} />
+        <Link className="mb-12" href={"/"}>
+          <Image height={200} width={200} alt="logo" src={"/images/logo.png"} />
         </Link>
-        <ul className={`hidden lg:flex space-x-20 ${chakraPetch.className}`}>
+        <ul
+          className={`hidden w-full lg:flex flex-col flex-grow space-y-6 ${chakraPetch.className}`}
+        >
           <li>
-            <Link href={"/"}>
+            <Link
+              className="flex items-center space-x-4 hover:bg-slate-800 px-2 py-1 rounded-md transition-all"
+              href={"/"}
+            >
               <MdHomeFilled size={32} />
+              <p>Home</p>
             </Link>
           </li>
           <li>
-            <Link href={"/analytics"}>
+            <Link
+              className="flex items-center space-x-4 hover:bg-slate-800 px-2 py-1 rounded-md transition-all"
+              href={"/analytics"}
+            >
               <MdAnalytics size={32} />
+              <p>Analytics</p>
             </Link>
           </li>
           <li>
-            <Link href={"/bookings"}>
+            <Link
+              className="flex items-center space-x-4 hover:bg-slate-800 px-2 py-1 rounded-md transition-all"
+              href={"/bookings"}
+            >
               <Image
-                height={28}
-                width={28}
+                height={32}
+                width={32}
                 alt="orders"
                 src={"/images/orders.png"}
               />
+              <p>Orders</p>
             </Link>
           </li>
           <li>
-            <Link href={"/services"}>
+            <Link
+              className="flex items-center space-x-4 hover:bg-slate-800 px-2 py-1 rounded-md transition-all"
+              href={"/services"}
+            >
               <Image
-                height={28}
-                width={28}
+                height={32}
+                width={32}
                 alt="orders"
                 src={"/images/services.png"}
               />
+              <p>Services</p>
             </Link>
           </li>
           <li>
-            <Link href={"/"}>
+            <Link
+              className="flex items-center space-x-4 hover:bg-slate-800 px-2 py-1 rounded-md transition-all"
+              href={"/"}
+            >
               <MdNotifications size={32} />
+              <p>Notifications</p>
             </Link>
           </li>
         </ul>
-
-        <div
-          className={`w-full h-full justify-center items-center md:w-[450px] md:h-[600px] bg-slate-950 z-50 flex lg:hidden absolute top-0 ${
-            menuOpen ? "left-0" : "-left-[100%]"
-          } transition-all`}
-        >
-          <IoMdClose
-            onClick={() => setMenuOpen(false)}
-            className="absolute top-10 left-10 cursor-pointer"
-            color="pink"
-            size={36}
-          />
-          <ul
-            className={`h-full flex flex-col justify-center space-y-10 ${chakraPetch.className}`}
-          >
-            <li>
-              <Link className="flex items-center space-x-4" href={"/"}>
-                <MdHomeFilled size={44} />
-                <p>Home</p>
-              </Link>
-            </li>
-            <li>
-              <Link className="flex items-center space-x-4" href={"/analytics"}>
-                <MdAnalytics size={44} />
-                <p>Analytics</p>
-              </Link>
-            </li>
-            <li>
-              <Link className="flex items-center space-x-4" href={"/bookings"}>
-                <Image
-                  height={40}
-                  width={40}
-                  alt="orders"
-                  src={"/images/orders.png"}
-                />
-                <p>Bookings</p>
-              </Link>
-            </li>
-            <li>
-              <Link className="flex items-center space-x-4" href={"/services"}>
-                <Image
-                  height={40}
-                  width={40}
-                  alt="orders"
-                  src={"/images/services.png"}
-                />
-                <p>Services</p>
-              </Link>
-            </li>
-            <li>
-              <Link className="flex items-center space-x-4" href={"/"}>
-                <MdNotifications size={44} />
-                <p>Notifications</p>
-              </Link>
-            </li>
-          </ul>
-        </div>
         <UserDropDown user={user} />
+      </div>
+      <div
+        onClick={() => setMenuOpen(false)}
+        className="flex justify-center items-center cursor-pointer absolute top-0 right-0 w-10 h-10 text-slate-950 bg-slate-100 rounded-l-2xl"
+      >
+        <IoIosArrowBack size={32} />
+      </div>
+
+      <div
+        onClick={() => setMenuOpen(true)}
+        className={`flex justify-center items-center cursor-pointer absolute top-0 -right-10 w-12 h-10 text-slate-100 bg-slate-950 rounded-r-2xl ${
+          menuOpen ? "hidden" : ""
+        }`}
+      >
+        <HiMenuAlt1 size={32} />
       </div>
     </nav>
   );

@@ -21,10 +21,16 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={inter.className + " dark min-h-screen bg-slate-950"}>
+      <body
+        className={
+          inter.className + "min-h-screen min-w-screen bg-slate-100 dark relative"
+        }
+      >
         <Provider>
-          <Navbar user={session?.user} />
-          {children}
+          <div className="flex">
+            <Navbar user={session?.user} />
+            {children}
+          </div>
         </Provider>
       </body>
     </html>

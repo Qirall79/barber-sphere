@@ -9,7 +9,7 @@ const page = async () => {
   if (session?.user.complete) redirect("/");
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex h-screen flex-col items-center justify-between p-24">
       <ConfigForm type={session?.user.type as string} />
     </main>
   );

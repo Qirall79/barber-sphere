@@ -22,22 +22,23 @@ export const Navbar = ({ user }: { user: IUser | undefined }) => {
 
   return (
     <nav
-      className={`bg-slate-950 text-slate-100 h-screen w-[300px]  py-4 relative ${
-        menuOpen ? "px-4" : "-translate-x-full w-0 static px-0"
+      className={`bg-slate-950 text-slate-100 h-screen py-4 relative ${
+        menuOpen ? "w-[320px] px-4" : "-translate-x-full w-0 px-0"
       } transition-all`}
     >
       <div
-        className={`max-h-screen h-full w-full max-w-[1250px] flex flex-col justify-start items-start ${
+        className={`max-h-screen h-full w-full flex flex-col justify-start items-start ${
           menuOpen ? "" : "hidden"
         }`}
       >
-        <MdOutlineMenu
-          className="lg:hidden cursor-pointer"
-          size={36}
-          onClick={() => setMenuOpen(true)}
-        />
-        <Link className="mb-12" href={"/"}>
-          <Image height={200} width={200} alt="logo" src={"/images/logo.png"} />
+        <Link className="w-full mb-12 flex justify-between items-center" href={"/"}>
+          <Image height={120} width={120} alt="logo" src={"/images/logo.png"} />
+          <div
+            onClick={() => setMenuOpen(false)}
+            className="flex justify-center items-center cursor-pointer w-10 h-10 text-slate-100 bg-slate-950 rounded-l-2xl"
+          >
+            <IoIosArrowBack size={32} />
+          </div>
         </Link>
         <ul
           className={`hidden w-full lg:flex flex-col flex-grow space-y-6 ${chakraPetch.className}`}
@@ -100,16 +101,16 @@ export const Navbar = ({ user }: { user: IUser | undefined }) => {
         </ul>
         <UserDropDown user={user} />
       </div>
-      <div
+      {/* <div
         onClick={() => setMenuOpen(false)}
-        className="flex justify-center items-center cursor-pointer absolute top-0 right-0 w-10 h-10 text-slate-950 bg-slate-100 rounded-l-2xl"
+        className="flex justify-center items-center cursor-pointer absolute top-1 -right-1 w-10 h-10 text-slate-950 bg-slate-100 rounded-l-2xl"
       >
         <IoIosArrowBack size={32} />
-      </div>
+      </div> */}
 
       <div
         onClick={() => setMenuOpen(true)}
-        className={`flex justify-center items-center cursor-pointer absolute top-0 -right-10 w-12 h-10 text-slate-100 bg-slate-950 rounded-r-2xl ${
+        className={`flex justify-center items-center cursor-pointer absolute top-1 -right-10 w-12 h-10 text-slate-100 bg-slate-950 rounded-r-2xl ${
           menuOpen ? "hidden" : ""
         }`}
       >

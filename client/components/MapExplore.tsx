@@ -1,11 +1,11 @@
-"use client";
-import { Map } from "react-map-gl";
-import mapboxgl from "mapbox-gl";
-import { useEffect, useRef, useState } from "react";
-import { LngLatLike, MapInstance, MapLib } from "react-map-gl/dist/esm/types";
+'use client';
+import { Map } from 'react-map-gl';
+import mapboxgl from 'mapbox-gl';
+import { useEffect, useRef, useState } from 'react';
+import { LngLatLike, MapInstance, MapLib } from 'react-map-gl/dist/esm/types';
 
 mapboxgl.accessToken =
-  "pk.eyJ1IjoicWlyYWxsNzkiLCJhIjoiY20wMmlncmlkMDFrZzJtcXhweDZkcWgxdyJ9.1M4Azuu3IoRflZ9h0pZGcQ";
+  'pk.eyJ1IjoicWlyYWxsNzkiLCJhIjoiY20wMmlncmlkMDFrZzJtcXhweDZkcWgxdyJ9.1M4Azuu3IoRflZ9h0pZGcQ';
 
 const markers: any[] = [];
 
@@ -33,7 +33,7 @@ export const MapExplore = () => {
     if (map.current) return; // initialize map only once
     map.current = new mapboxgl.Map({
       container: mapContainer.current!,
-      style: "mapbox://styles/mapbox/navigation-night-v1",
+      style: 'mapbox://styles/mapbox/navigation-night-v1',
       center: userLocation as LngLatLike | undefined,
       zoom: zoom,
     });
@@ -47,14 +47,14 @@ export const MapExplore = () => {
 
     map.current.addControl(geolocate);
 
-    map.current.on("load", () => {
+    map.current.on('load', () => {
       geolocate.trigger();
       map.current.flyTo({
         center: userLocation,
         essential: true,
         zoom: zoom * 4,
       });
-      barbers.forEach((b) => {
+      barbers.forEach((b: any) => {
         new mapboxgl.Marker()
           .setLngLat(b)
           .setPopup(
@@ -65,30 +65,16 @@ export const MapExplore = () => {
       });
     });
 
-    map.current.on("move", () => {
+    map.current.on('move', () => {
       setLng(map.current.getCenter().lng.toFixed(4));
       setLat(map.current.getCenter().lat.toFixed(4));
       setZoom(map.current.getZoom().toFixed(2));
-    });
-
-    map.current.on("click", async (e: any) => {
-      // markers.forEach((m: any) => m.remove());
-      // let x = e.lngLat.wrap().lng;
-      // let y = e.lngLat.wrap().lat;
-      // console.log([x, y]);
-      // const newMarker = new mapboxgl.Marker()
-      //   .setLngLat([x, y])
-      //   .addTo(map.current);
-      // markers.push(newMarker);
     });
   });
 
   return (
     <div>
-      <div className="sidebar">
-        Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
-      </div>
-      <div ref={mapContainer} className="map-container h-[800px] rounded-md" />
+      <div ref={mapContainer} className='map-container h-[75vh] rounded-md' />
     </div>
   );
 };

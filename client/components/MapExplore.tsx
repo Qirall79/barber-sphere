@@ -1,13 +1,21 @@
-'use client';
-import { Map } from 'react-map-gl';
-import mapboxgl from 'mapbox-gl';
-import { useEffect, useRef, useState } from 'react';
-import { LngLatLike, MapInstance, MapLib } from 'react-map-gl/dist/esm/types';
+"use client";
+import { Map } from "react-map-gl";
+import mapboxgl from "mapbox-gl";
+import { useEffect, useRef, useState } from "react";
+import { LngLatLike, MapInstance, MapLib } from "react-map-gl/dist/esm/types";
 
 mapboxgl.accessToken =
-  'pk.eyJ1IjoicWlyYWxsNzkiLCJhIjoiY20wMmlncmlkMDFrZzJtcXhweDZkcWgxdyJ9.1M4Azuu3IoRflZ9h0pZGcQ';
+  "pk.eyJ1IjoicWlyYWxsNzkiLCJhIjoiY20wMmlncmlkMDFrZzJtcXhweDZkcWgxdyJ9.1M4Azuu3IoRflZ9h0pZGcQ";
 
 const markers: any[] = [];
+
+const barbers = [
+  [-6.900450244093804, 32.882890885192296],
+  [-6.897002155185191, 32.88079370994204],
+  [-6.898802124559552, 32.87654615822997],
+  [-6.909292048420525, 32.88646525454216],
+  [-6.933808435056221, 32.89372243026345],
+];
 
 export const MapExplore = () => {
   const mapContainer = useRef(null);
@@ -17,7 +25,7 @@ export const MapExplore = () => {
   const [zoom, setZoom] = useState(4);
 
   useEffect(() => {
-    let userLocation = [-8.0631, 32.655];
+    let userLocation = [-6.9134, 32.8795];
     navigator.geolocation.getCurrentPosition((pos) => {
       userLocation = [pos.coords.longitude, pos.coords.latitude];
     });
@@ -25,54 +33,62 @@ export const MapExplore = () => {
     if (map.current) return; // initialize map only once
     map.current = new mapboxgl.Map({
       container: mapContainer.current!,
-      style: 'mapbox://styles/mapbox/navigation-night-v1',
-      center: userLocation as (LngLatLike | undefined),
+      style: "mapbox://styles/mapbox/navigation-night-v1",
+      center: userLocation as LngLatLike | undefined,
       zoom: zoom,
     });
+    let geolocate = new mapboxgl.GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true,
+      },
+      trackUserLocation: true,
+      showUserHeading: true,
+    });
 
-    map.current.on('load', () => {
+    map.current.addControl(geolocate);
+
+    map.current.on("load", () => {
+      geolocate.trigger();
       map.current.flyTo({
         center: userLocation,
         essential: true,
         zoom: zoom * 4,
       });
+      barbers.forEach((b) => {
+        new mapboxgl.Marker()
+          .setLngLat(b)
+          .setPopup(
+            new mapboxgl.Popup({ offset: 25 }) // add popups
+              .setHTML(`<h3>this is a popup</h3><p>7ala9 sa3ada</p>`)
+          )
+          .addTo(map.current);
+      });
     });
 
-    map.current.addControl(
-      new mapboxgl.GeolocateControl({
-        positionOptions: {
-          enableHighAccuracy: true,
-        },
-        // When active the map will receive updates to the device's location as it changes.
-        trackUserLocation: true,
-        // Draw an arrow next to the location dot to indicate which direction the device is heading.
-        showUserHeading: true,
-      })
-    );
-
-    map.current.on('move', () => {
+    map.current.on("move", () => {
       setLng(map.current.getCenter().lng.toFixed(4));
       setLat(map.current.getCenter().lat.toFixed(4));
       setZoom(map.current.getZoom().toFixed(2));
     });
 
-    map.current.on('click', async (e: any) => {
-      markers.forEach((m: any) => m.remove());
-      let x = e.lngLat.wrap().lng;
-      let y = e.lngLat.wrap().lat;
-      const newMarker = new mapboxgl.Marker()
-        .setLngLat([x, y])
-        .addTo(map.current);
-      markers.push(newMarker);
+    map.current.on("click", async (e: any) => {
+      // markers.forEach((m: any) => m.remove());
+      // let x = e.lngLat.wrap().lng;
+      // let y = e.lngLat.wrap().lat;
+      // console.log([x, y]);
+      // const newMarker = new mapboxgl.Marker()
+      //   .setLngLat([x, y])
+      //   .addTo(map.current);
+      // markers.push(newMarker);
     });
   });
 
   return (
     <div>
-      <div className='sidebar'>
+      <div className="sidebar">
         Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
       </div>
-      <div ref={mapContainer} className='map-container h-[800px] rounded-md' />
+      <div ref={mapContainer} className="map-container h-[800px] rounded-md" />
     </div>
   );
 };

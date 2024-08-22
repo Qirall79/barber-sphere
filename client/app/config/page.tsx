@@ -10,7 +10,7 @@ const page = async () => {
 
   return (
     <main className="w-full flex flex-col flex-grow p-12 bg-slate-100 rounded-md">
-      <ConfigForm type={session?.user.type as string} />
+      <ConfigForm user={session?.user as IUser} />
     </main>
   );
 };

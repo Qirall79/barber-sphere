@@ -13,8 +13,9 @@ import { FileInput } from "./ui/FileInput";
 import { IoMdCloseCircle } from "react-icons/io";
 import Image from "next/image";
 import uploadFile from "@/lib/uploadFile";
+import { useSession } from "@/hooks/useSession";
 
-export const ConfigForm = ({ type }: { type: string }) => {
+export const ConfigForm = ({ user }: { user: IUser }) => {
   const {
     register,
     handleSubmit,
@@ -37,7 +38,7 @@ export const ConfigForm = ({ type }: { type: string }) => {
 
     formData.location = `${position[0]}, ${position[1]}`;
     setIsLoading(true);
-    const imageUrl = await uploadFile([file]);
+    const imageUrl = await uploadFile([file], user.picture);
 
     formData.picture = imageUrl;
     await updateUser({
@@ -65,14 +66,14 @@ export const ConfigForm = ({ type }: { type: string }) => {
   return (
     <div className="w-full flex flex-col space-y-8">
       <h1 className="text-3xl font-semibold">
-        {type === "shop" ? "Create Shop" : "Add Profile Picture"}
+        {user.type === "shop" ? "Create Shop" : "Add Profile Picture"}
       </h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col space-y-4 w-full max-w-[650px]"
         autoComplete="off"
       >
-        {type && type == "shop" && (
+        {user.type && user.type == "shop" && (
           <>
             <InputField
               errors={errors}

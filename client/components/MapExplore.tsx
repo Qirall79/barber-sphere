@@ -1,11 +1,11 @@
-'use client';
-import { Map } from 'react-map-gl';
-import mapboxgl from 'mapbox-gl';
-import { useEffect, useRef, useState } from 'react';
-import { LngLatLike, MapInstance, MapLib } from 'react-map-gl/dist/esm/types';
+"use client";
+import { Map } from "react-map-gl";
+import mapboxgl from "mapbox-gl";
+import { useEffect, useRef, useState } from "react";
+import { LngLatLike, MapInstance, MapLib } from "react-map-gl/dist/esm/types";
 
 mapboxgl.accessToken =
-  'pk.eyJ1IjoicWlyYWxsNzkiLCJhIjoiY20wMmlncmlkMDFrZzJtcXhweDZkcWgxdyJ9.1M4Azuu3IoRflZ9h0pZGcQ';
+  "pk.eyJ1IjoicWlyYWxsNzkiLCJhIjoiY20wMmlncmlkMDFrZzJtcXhweDZkcWgxdyJ9.1M4Azuu3IoRflZ9h0pZGcQ";
 
 const markers: any[] = [];
 
@@ -30,10 +30,12 @@ export const MapExplore = () => {
       userLocation = [pos.coords.longitude, pos.coords.latitude];
     });
 
-    if (map.current) return; // initialize map only once
+    if (map.current) {
+      return;
+    }
     map.current = new mapboxgl.Map({
       container: mapContainer.current!,
-      style: 'mapbox://styles/mapbox/navigation-night-v1',
+      style: "mapbox://styles/mapbox/navigation-night-v1",
       center: userLocation as LngLatLike | undefined,
       zoom: zoom,
     });
@@ -47,7 +49,7 @@ export const MapExplore = () => {
 
     map.current.addControl(geolocate);
 
-    map.current.on('load', () => {
+    map.current.on("load", () => {
       geolocate.trigger();
       map.current.flyTo({
         center: userLocation,
@@ -65,16 +67,17 @@ export const MapExplore = () => {
       });
     });
 
-    map.current.on('move', () => {
+    map.current.on("move", () => {
       setLng(map.current.getCenter().lng.toFixed(4));
       setLat(map.current.getCenter().lat.toFixed(4));
       setZoom(map.current.getZoom().toFixed(2));
+      map.current.resize();
     });
   });
 
   return (
     <div>
-      <div ref={mapContainer} className='map-container h-[75vh] rounded-md' />
+      <div ref={mapContainer} className="map-container h-[75vh] rounded-md" />
     </div>
   );
 };

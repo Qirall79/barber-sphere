@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Provider from "./Provider";
 import { getServerSession } from "@/lib/session";
-import { Navbar } from "@/components/Navbar";
+import { SideBar } from "@/components/SideBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,7 +32,7 @@ export default async function RootLayout({
       >
         <Provider>
           <div className="flex bg-slate-950">
-            <Navbar user={session?.user} />
+            <SideBar user={session?.user} />
             <div className="flex flex-grow p-1 light">{children}</div>
           </div>
         </Provider>

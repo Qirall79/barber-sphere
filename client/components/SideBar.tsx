@@ -16,7 +16,7 @@ import { HiMenuAlt1 } from "react-icons/hi";
 import { LuArrowLeftFromLine } from "react-icons/lu";
 import { SiMapbox } from "react-icons/si";
 
-export const Navbar = ({ user }: { user: IUser | undefined }) => {
+export const SideBar = ({ user }: { user: IUser | undefined }) => {
   const [menuOpen, setMenuOpen] = useState(true);
 
   if (!user) return <></>;

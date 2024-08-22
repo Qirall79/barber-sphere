@@ -6,7 +6,7 @@ import React from "react";
 const page = async () => {
   const session = await getServerSession();
 
-  // if (session?.user.complete) redirect("/");
+  if (session?.user.complete) redirect("/");
 
   return (
     <main className="w-full flex flex-col flex-grow p-12 bg-slate-100 rounded-md">

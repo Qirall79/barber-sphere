@@ -74,6 +74,7 @@ export const ServiceForm = () => {
           variant="bordered"
           type="number"
           placeholder="0.00"
+          min={0.3}
           startContent={
             <div className="pointer-events-none flex items-center">
               <span className="text-default-400 text-small">$</span>

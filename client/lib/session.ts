@@ -5,7 +5,7 @@ export const getServerSession = async (): Promise<ISession | null> => {
 
   if (!sessionCookie) return null;
   try {
-    const response = await fetch("http://localhost:3001/auth", {
+    const response = await fetch(process.env.NEXT_PUBLIC_API_URL + "/auth", {
       method: "GET",
       credentials: "include",
       headers: {

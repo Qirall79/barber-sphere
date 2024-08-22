@@ -9,7 +9,7 @@ export default async function Home() {
   if (session) return redirect('/');
 
   return (
-    <main className='flex w-full h-screen flex-col items-center justify-between p-12'>
+    <main className='flex w-full h-screen flex-col items-center justify-between p-12 dark text-slate-100'>
       <Toaster />
       <SignIn />
     </main>

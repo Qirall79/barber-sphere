@@ -71,6 +71,9 @@ export const MapExplore = () => {
       setLng(map.current.getCenter().lng.toFixed(4));
       setLat(map.current.getCenter().lat.toFixed(4));
       setZoom(map.current.getZoom().toFixed(2));
+    });
+
+    map.current.on("idle", function () {
       map.current.resize();
     });
   });

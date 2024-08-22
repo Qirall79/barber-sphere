@@ -1,11 +1,11 @@
 import toast from "react-hot-toast";
 
-export default async function uploadFile(files: File[], oldFile: string) {
+export default async function uploadFile(file: File, oldFile?: string) {
   try {
     const formData = new FormData();
 
-    formData.set("file", files[0]);
-    formData.set("oldFile", oldFile);
+    formData.set("file", file);
+    if (oldFile) formData.set("oldFile", oldFile);
 
     const res = await fetch("/api/fileupload", {
       method: "POST",
@@ -15,6 +15,6 @@ export default async function uploadFile(files: File[], oldFile: string) {
     const data = await res.json();
     return data.url;
   } catch (error) {
-    toast.error("Error Uploading image, please try again later !")
+    toast.error("Error Uploading image, please try again later !");
   }
 }

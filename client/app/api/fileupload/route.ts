@@ -18,7 +18,13 @@ export const POST = async (req: NextRequest) => {
   const formData = await req.formData();
 
   const file: File = formData?.get("file") as File;
+
+  // check oldFile to delete it if it exists
   const oldFile: string = formData?.get("oldFile") as string;
+  const isValidOldFile =
+    oldFile && oldFile.includes(process.env.CLOUDFLARE_NAME ?? "");
+  
+    // create file buffer
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
   const key = v4();
@@ -28,14 +34,16 @@ export const POST = async (req: NextRequest) => {
     Body: buffer,
   });
 
-  const deleteObjectCommand = new DeleteObjectCommand({
-    Key: oldFile.split("/")[4],
-    Bucket: process.env.CLOUDFLARE_NAME,
-  });
+  let deleteObjectCommand;
+  if (isValidOldFile)
+    deleteObjectCommand = new DeleteObjectCommand({
+      Key: oldFile.split("/")[4],
+      Bucket: process.env.CLOUDFLARE_NAME,
+    });
 
   try {
-    const response = await r2.send(putObjectCommand);
-    await r2.send(deleteObjectCommand);
+    await r2.send(putObjectCommand);
+    if (isValidOldFile) await r2.send(deleteObjectCommand!);
     return NextResponse.json(
       { sucess: true, url: process.env.CLOUDFLARE_URL + key },
       { status: 200 }

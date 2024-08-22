@@ -38,7 +38,7 @@ export const ConfigForm = ({ user }: { user: IUser }) => {
 
     formData.location = `${position[0]}, ${position[1]}`;
     setIsLoading(true);
-    const imageUrl = await uploadFile([file], user.picture);
+    const imageUrl = await uploadFile(file, user.picture);
 
     formData.picture = imageUrl;
     await updateUser({

@@ -12,6 +12,7 @@ import { useRef, useState } from "react";
 import { FileInput } from "./ui/FileInput";
 import { IoMdCloseCircle } from "react-icons/io";
 import Image from "next/image";
+import uploadFile from "@/lib/uploadFile";
 
 export const ConfigForm = ({ type }: { type: string }) => {
   const {
@@ -22,6 +23,7 @@ export const ConfigForm = ({ type }: { type: string }) => {
 
   const [updateUser, { loading }] = useMutation(UPDATE_USER());
   const [position, setPosition] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [isInvalid, setIsInvalid] = useState(false);
   const [file, setFile] = useState<any>();
   const inputRef = useRef<any>(null);
@@ -34,6 +36,10 @@ export const ConfigForm = ({ type }: { type: string }) => {
     }
 
     formData.location = `${position[0]}, ${position[1]}`;
+    setIsLoading(true);
+    const imageUrl = await uploadFile([file]);
+
+    formData.picture = imageUrl;
     await updateUser({
       variables: {
         updateUserInput: formData,
@@ -41,6 +47,7 @@ export const ConfigForm = ({ type }: { type: string }) => {
     });
     revalidate("/");
     router.push("/");
+    setIsLoading(false);
   };
 
   const handleFileChange = (e: any) => {
@@ -99,7 +106,7 @@ export const ConfigForm = ({ type }: { type: string }) => {
           isInvalid={isInvalid}
         />
         <Button
-          isLoading={loading}
+          isLoading={loading || isLoading}
           type="submit"
           color="primary"
           className="bg-slate-950"

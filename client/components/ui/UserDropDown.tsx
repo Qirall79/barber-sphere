@@ -20,7 +20,7 @@ export default function UserDropDown({ user }: { user: IUser }) {
               name={user.name}
               description={user.type}
               avatarProps={{
-                src: "https://api.dicebear.com/7.x/lorelei/svg",
+                src:user.picture ?? "https://api.dicebear.com/7.x/lorelei/svg",
               }}
             />
             <CiMenuKebab size={20} />
